@@ -1,5 +1,9 @@
 
 function FindFile()
+  if ! filereadable('cscope.files')
+    echo "ERROE: Can not read cscope.files"
+    return
+  endif
   tabnew
 
   let select = 0
