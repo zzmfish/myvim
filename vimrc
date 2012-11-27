@@ -97,12 +97,13 @@ function Build()
   endif
 endfunction
 
-function DotView()
+function Dot()
   let filename = expand('%')
   if strlen(filename) > 4 && strpart(filename, strlen(filename) - 4) == '.dot'
     let pngfile = strpart(filename, 0, strlen(filename) - 4) . '.png'
-    execute '!dot -Tpng ' . filename . ' -o ' . pngfile
-    execute '!eog ' . pngfile .' &>/dev/null &'
+    execute 'silent !dot -Tpng ' . filename . ' -o ' . pngfile
+    execute 'silent !eog ' . pngfile .' &>/dev/null &'
+    redraw!
   endif
 endfunction
 
@@ -112,6 +113,7 @@ map <F5> :call Run()<CR>
 map <F6> :call SVNDiff()<CR>
 map <C-H> :tabprevious<CR>
 map <C-L> :tabnext<CR>
+command Dot call Dot()
 
 au FileType cpp setlocal dict+=~/.vim/dict/cpp.txt
 au FileType h setlocal dict+=~/.vim/dict/h.txt
