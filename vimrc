@@ -12,9 +12,9 @@ set diffopt=iwhite,vertical
 colorscheme desert
 
 "折叠
-set foldmarker=#if,#endif
-set foldmethod=marker
+set foldmethod=syntax
 set foldlevel=9999
+set foldcolumn=5
 
 filetype plugin on
 syntax on
@@ -84,6 +84,6 @@ map <C-H> :tabprevious<CR>
 map <C-L> :tabnext<CR>
 command Dot call Dot()
 
-au FileType cpp setlocal dict+=~/.vim/dict/cpp.txt
-au FileType h setlocal dict+=~/.vim/dict/h.txt
+au FileType h,c,cpp setlocal dict+=~/.vim/dict/cpp.txt
+au FileType h,c,cpp syn region zhouzmFoldIf start="^\s*#if" end="^\s*#endif" fold transparent keepend
 
