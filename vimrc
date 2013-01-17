@@ -85,5 +85,5 @@ map <C-L> :tabnext<CR>
 command Dot call Dot()
 
 au FileType h,c,cpp setlocal dict+=~/.vim/dict/cpp.txt
-au FileType h,c,cpp syn region zhouzmFoldIf start="^\s*#if" end="^\s*#endif" fold transparent keepend
+au FileType h,c,cpp syn region zhouzmFoldIf start="^\s*#if" end="^\s*#endif" fold transparent extend
 
