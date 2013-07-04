@@ -16,7 +16,7 @@ function! Grep(word)
     let splitLine = split(line, ':')
     let filePath = splitLine[0]
     let lineNum = splitLine[1]
-    execute "tabedit " . filePath
+    execute "edit " . filePath
     execute lineNum
 endfunction
 
@@ -24,6 +24,7 @@ function! GrepMenu()
     let word = expand("<cword>")
     echo "Search: " . word
     let type = inputlist(['Type:', '1.Any', '2.Word', '3.Class', '4.Function'])
+    echo "\n"
     if type == 1
         call Grep(word)
     elseif type == 2
