@@ -23,7 +23,7 @@ function! Grep(pattern, word)
     elseif len(matchList) > 20
         echo "Too Many result!"
         return
-    elseif len(matchList) > 1
+    else
         let i = 1
         for i in range(len(matchList))
             let matchItem = matchList[i]
