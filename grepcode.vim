@@ -20,7 +20,7 @@ function! Grep(pattern, word)
     if len(matchList) == 0
         echo "Nothing is matched!"
         return
-    elseif len(matchList) > 20
+    elseif len(matchList) > 100
         echo "Too Many result!"
         return
     else
