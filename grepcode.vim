@@ -8,7 +8,7 @@ highlight GrepKeyword       ctermfg=1  guifg=Red cterm=bold gui=bold
 "返回列表
 let s:back_list = []
 
-function! ParseGrepLine(line)
+function ParseGrepLine(line)
     let splitItem = split(a:line, ":")
     let colon1 = stridx(a:line, ":")
     let colon2 = stridx(a:line, ":", colon1 + 1)
@@ -18,7 +18,7 @@ function! ParseGrepLine(line)
     return [fileName, fileLine, matchLine]
 endfunction
 
-function! GrepPattern(pattern, word)
+function GrepPattern(pattern, word)
     let cmd = "grep --binary-files=without-match --color=never -n"
     \ . " --exclude-dir='.svn' --exclude-dir='.git'"
     \ . " --exclude='cscope.files' --exclude='cscope.out' --exclude='tags' --exclude='*.log'"
@@ -91,23 +91,23 @@ function! GrepPattern(pattern, word)
     execute selectItem[1]
 endfunction
 
-function! GrepText(word)
+function GrepText(word)
     call GrepPattern(a:word, a:word)
 endfunction
 
-function! GrepWord(word)
+function GrepWord(word)
     call GrepPattern('\b' . a:word . '\b', a:word)
 endfunction
 
-function! GrepFunction(word)
+function GrepFunction(word)
     call GrepPattern('^[^\(]\+[: ]' . a:word . '\(.*\)\s\+[{\n]', a:word)
 endfunction
 
-function! GrepClass(word)
+function GrepClass(word)
     call GrepPattern('\bclass ' . a:word . '\s*[:{\n]', a:word)
 endfunction
 
-function! GrepBack()
+function GrepBack()
     "显示返回列表
     for i in range(len(s:back_list))
         let back_item = s:back_list[i]
@@ -138,7 +138,7 @@ function! GrepBack()
     execute back_pos[1]
 endfunction
 
-function! GrepMenu()
+function GrepMenu()
     let word = expand("<cword>")
     let type = inputlist(['Menu:', '1# Text', '2# Word', '3# Function', '4# Class', '5# [Back to ...]'])
     echo "\n"
