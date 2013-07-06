@@ -5,6 +5,9 @@ highlight GrepFileName      ctermfg=5  guifg=indianred
 highlight GrepLineNumber    ctermfg=2  guifg=yellowgreen
 highlight GrepKeyword       ctermfg=1  guifg=Red cterm=bold gui=bold
 
+"返回列表
+let s:back_list = []
+
 function! ParseGrepLine(line)
     let splitItem = split(a:line, ":")
     let colon1 = stridx(a:line, ":")
@@ -79,6 +82,10 @@ function! GrepPattern(pattern, word)
         endif
         let idx = idx - 1
     endif
+    "记录位置
+    let back_pos = [expand("%"), line('.'), strpart(getline('.'), 0 , 100)]
+    call insert(s:back_list, back_pos)
+    "跳到文件位置
     let selectItem = matchList[idx]
     execute "edit " . selectItem[0]
     execute selectItem[1]
@@ -100,9 +107,40 @@ function! GrepClass(word)
     call GrepPattern('\bclass ' . a:word . '\s*[:{\n]', a:word)
 endfunction
 
+function! GrepBack()
+    "显示返回列表
+    for i in range(len(s:back_list))
+        let back_item = s:back_list[i]
+        echohl GrepId
+        echon (i + 1) . '# '
+        echohl GrepFileName
+        echon back_item[0]
+        echohl GrepColon
+        echon ':'
+        echohl GrepLineNumber
+        echon back_item[1]
+        echohl GrepColon
+        echon ':'
+        echohl None
+        echon back_item[2]
+        echon "\n"
+    endfor
+    "选择返回位置
+    let idx = input('Back to: ')
+    if idx <= 0 || idx > len(s:back_list)
+        echo "Invalid Selection!"
+        sleep 1
+        return
+    endif
+    "返回位置
+    let back_pos = s:back_list[idx - 1]
+    execute 'edit ' . back_pos[0]
+    execute back_pos[1]
+endfunction
+
 function! GrepMenu()
     let word = expand("<cword>")
-    let type = inputlist(['Type:', '1# Text', '2# Word', '3# Function', '4# Class'])
+    let type = inputlist(['Menu:', '1# Text', '2# Word', '3# Function', '4# Class', '5# [Back to ...]'])
     echo "\n"
     if type == 1
         call GrepText(word)
@@ -112,5 +150,7 @@ function! GrepMenu()
         call GrepFunction(word)
     elseif type == 4
         call GrepClass(word)
+    elseif type == 5
+        call GrepBack()
     endif
 endfunction
