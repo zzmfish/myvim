@@ -1,5 +1,9 @@
 "grep
-highlight GrepKeyWord ctermfg=11 guifg=Yellow
+highlight GrepID            ctermfg=4  guifg=LightBlue
+highlight GrepColon         ctermfg=6  guifg=Cyan
+highlight GrepFileName      ctermfg=5  guifg=indianred
+highlight GrepLineNumber    ctermfg=2  guifg=yellowgreen
+highlight GrepKeyword       ctermfg=1  guifg=Red cterm=bold gui=bold
 
 function! ParseGrepLine(line)
     let splitItem = split(a:line, ":")
@@ -31,12 +35,21 @@ function! GrepPattern(pattern, word)
             let matchItem = matchList[i]
             let parsedItem = ParseGrepLine(matchItem)
             let matchList[i] = parsedItem
+            "显示序号
+            echohl GrepId
             echon (i + 1). "# "
+            "显示文件名
+            echohl GrepFileName
             echon parsedItem[0]
+            echohl GrepColon
             echon ":"
+            "显示行号
+            echohl GrepLineNumber
             echon parsedItem[1]
+            echohl GrepColon
             echon ":"
             "显示匹配行并高亮关键词
+            echohl None
             let matchLine = parsedItem[2]
             let linePos = 0
             while 1
@@ -46,7 +59,7 @@ function! GrepPattern(pattern, word)
                     break
                 else
                     echon strpart(matchLine, linePos, wordPos - linePos)
-                    echohl GrepKeyWord
+                    echohl GrepKeyword
                     echon strpart(matchLine, wordPos, strlen(a:word))
                     echohl None
                     let linePos = wordPos + strlen(a:word)
@@ -58,7 +71,7 @@ function! GrepPattern(pattern, word)
             echon "\n"
             let i = i + 1
         endfor
-        let idx = input("Select: ")
+        let idx = input("Jump to: ")
         if idx <= 0 || idx > len(matchList)
             echo "Invalid Selection!"
             sleep 1
