@@ -1,4 +1,6 @@
 "grep
+highlight GrepKeyWord ctermfg=11 guifg=Yellow
+
 function! ParseGrepLine(line)
     let splitItem = split(a:line, ":")
     let colon1 = stridx(a:line, ":")
@@ -9,7 +11,7 @@ function! ParseGrepLine(line)
     return [fileName, fileLine, matchLine]
 endfunction
 
-function! Grep(pattern, word)
+function! GrepPattern(pattern, word)
     let cmd = "grep --binary-files=without-match --color=never -n"
     \ . " --exclude-dir='.svn' --exclude-dir='.git'"
     \ . " --exclude='cscope.files' --exclude='cscope.out' --exclude='tags' --exclude='*.log'"
@@ -44,7 +46,7 @@ function! Grep(pattern, word)
                     break
                 else
                     echon strpart(matchLine, linePos, wordPos - linePos)
-                    echohl Keyword
+                    echohl GrepKeyWord
                     echon strpart(matchLine, wordPos, strlen(a:word))
                     echohl None
                     let linePos = wordPos + strlen(a:word)
@@ -69,22 +71,33 @@ function! Grep(pattern, word)
     execute selectItem[1]
 endfunction
 
+function! GrepText(word)
+    call GrepPattern(a:word, a:word)
+endfunction
+
+function! GrepWord(word)
+    call GrepPattern('\b' . a:word . '\b', a:word)
+endfunction
+
+function! GrepFunction(word)
+    call GrepPattern('^[^\(]\+[: ]' . a:word . '\(.*\)\s\+[{\n]', a:word)
+endfunction
+
+function! GrepClass(word)
+    call GrepPattern('\bclass ' . a:word . '\s*[:{\n]', a:word)
+endfunction
+
 function! GrepMenu()
     let word = expand("<cword>")
-    echon "Search Word: "
-    echohl Keyword
-    echon word
-    echohl None
-    let type = inputlist(['Type:', '1.Any', '2.Word', '3.Class', '4.Function'])
+    let type = inputlist(['Type:', '1# Text', '2# Word', '3# Function', '4# Class'])
     echo "\n"
     if type == 1
-        call Grep(word, grep)
+        call GrepText(word)
     elseif type == 2
-        call Grep('\b' . word . '\b', word)
+        call GrepWord(word)
     elseif type == 3
-        call Grep('\bclass ' . word . '\s*[:{\n]', word)
+        call GrepFunction(word)
     elseif type == 4
-        call Grep('^[^\(]\+[: ]' . word . '\(.*\)\s\+[{\n]', word)
-    else
+        call GrepClass(word)
     endif
 endfunction
