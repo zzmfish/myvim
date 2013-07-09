@@ -34,6 +34,7 @@ function GrepPattern(pattern, word)
     \ . " --exclude-dir='.svn' --exclude-dir='.git'"
     \ . " --exclude='cscope.files' --exclude='cscope.out' --exclude='tags' --exclude='*.log'"
     \ . " \"" . escape(a:pattern, '\') . "\" * -r"
+    "echo cmd
     let result = system(cmd)
     let matchList = split(result, '\n')
     let idx = 0
@@ -115,7 +116,7 @@ function GrepFunction(word)
 endfunction
 
 function GrepClass(word)
-    call GrepPattern('\bclass ' . a:word . '\s*[:{\n]', a:word)
+    call GrepPattern('\bclass ' . a:word . '\b[a-zA-Z0-9_ ]*[:{\n]', a:word)
 endfunction
 
 function GrepBack()
