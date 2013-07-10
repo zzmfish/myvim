@@ -30,11 +30,12 @@ function ParseGrepLine(line)
 endfunction
 
 function GrepPattern(pattern, word)
-    let cmd = "grep --binary-files=without-match --color=never -n"
+    let cmd = "grep -P --binary-files=without-match --color=never -n"
     \ . " --exclude-dir='.svn' --exclude-dir='.git'"
     \ . " --exclude='cscope.files' --exclude='cscope.out' --exclude='tags' --exclude='*.log'"
     \ . " \"" . escape(a:pattern, '\') . "\" * -r"
     "echo cmd
+    "echo "\n"
     let result = system(cmd)
     let matchList = split(result, '\n')
     let idx = 0
@@ -112,7 +113,7 @@ function GrepWord(word)
 endfunction
 
 function GrepFunction(word)
-    call GrepPattern('^[^\(]\+[: ]' . a:word . '\(.*\)\s\+[{\n]', a:word)
+    call GrepPattern('^[^\(]+[: ]' . a:word . '\(.*\)\s+[{\n]', a:word)
 endfunction
 
 function GrepClass(word)
