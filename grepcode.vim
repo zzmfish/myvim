@@ -113,7 +113,7 @@ function GrepWord(word)
 endfunction
 
 function GrepFunction(word)
-    call GrepPattern('^[^\(]+[: ]' . a:word . '\(.*\)\s+[{\n]', a:word)
+    call GrepPattern('^[^\(]+[: ]' . a:word . '\(.*\)\s+(const\s*)?[{\n]', a:word)
 endfunction
 
 function GrepClass(word)
