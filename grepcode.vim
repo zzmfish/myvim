@@ -37,6 +37,7 @@ function GrepPattern(pattern, word)
     "echo cmd
     "echo "\n"
     let result = system(cmd)
+    let result = tr(result, "\r", " ")
     let matchList = split(result, '\n')
     let idx = 0
     if len(matchList) == 0
