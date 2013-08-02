@@ -80,7 +80,7 @@ function GrepPattern(pattern, word)
                     echon strpart(matchLine, wordPos, strlen(a:word))
                     echohl None
                     let linePos = wordPos + strlen(a:word)
-                    if linePos >= strlen(matchLine) - 1
+                    if linePos >= strlen(matchLine)
                         break
                     endif
                 endif
