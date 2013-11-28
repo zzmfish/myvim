@@ -1,7 +1,8 @@
 
 " README
 " Map keys in .vimrc:
-"   map <C-G> :call GrepMenu()<CR>
+"   map <C-G>m :call GrepMenu()<CR>
+"   map <C-G>d :call GrepDefinition(expand("<cword>"))<CR>
 "   map <C-G>t :call GrepText(expand("<cword>"))<CR>
 "   map <C-G>w :call GrepWord(expand("<cword>"))<CR>
 "   map <C-G>f :call GrepFunction(expand("<cword>"))<CR>
@@ -41,11 +42,10 @@ function GrepPattern(pattern, word)
     let matchList = split(result, '\n')
     let idx = 0
     if len(matchList) == 0
-        echo "Nothing is matched!"
-        return
+        return 0
     elseif len(matchList) > 100
         echo "Too Many result!"
-        return
+        return 0
     else
         let i = 1
         for i in range(len(matchList))
@@ -92,7 +92,7 @@ function GrepPattern(pattern, word)
         if idx <= 0 || idx > len(matchList)
             echo "Invalid Selection!"
             sleep 1
-            return
+            return 1
         endif
         let idx = idx - 1
     endif
@@ -103,22 +103,33 @@ function GrepPattern(pattern, word)
     let selectItem = matchList[idx]
     execute "edit " . selectItem[0]
     execute selectItem[1]
+    return 1
 endfunction
 
 function GrepText(word)
-    call GrepPattern(a:word, a:word)
+    return GrepPattern(a:word, a:word)
 endfunction
 
 function GrepWord(word)
-    call GrepPattern('\b' . a:word . '\b', a:word)
+    return GrepPattern('\b' . a:word . '\b', a:word)
 endfunction
 
 function GrepFunction(word)
-    call GrepPattern('^[^\(]+[: ]' . a:word . '\(.*\)\s+(const\s*)?[{\n]', a:word)
+    return GrepPattern('^[^\(]+[: ]' . a:word . '\(.*\)\s+(const\s*)?[{\n]', a:word)
 endfunction
 
 function GrepClass(word)
-    call GrepPattern('\bclass ' . a:word . '\b[a-zA-Z0-9_ ]*[:{\n]', a:word)
+    return GrepPattern('\bclass ' . a:word . '\b[a-zA-Z0-9_ ]*[:{\n]', a:word)
+endfunction
+
+function GrepDefinition(word)
+    if GrepClass(a:word) == 1
+        return
+    elseif GrepFunction(a:word) == 1
+        return
+    elseif GrepWord(a:word) == 1
+        return
+    endif
 endfunction
 
 function GrepBack()
