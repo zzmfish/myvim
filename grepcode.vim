@@ -1,7 +1,8 @@
 
 " README
 " Map keys in .vimrc:
-"   map <C-G> :call GrepMenu()<CR>
+"   map <C-G>m :call GrepMenu()<CR>
+"   map <C-G>d :call GrepDefinition(expand("<cword>"))<CR>
 "   map <C-G>t :call GrepText(expand("<cword>"))<CR>
 "   map <C-G>w :call GrepWord(expand("<cword>"))<CR>
 "   map <C-G>f :call GrepFunction(expand("<cword>"))<CR>
@@ -41,7 +42,6 @@ function GrepPattern(pattern, word)
     let matchList = split(result, '\n')
     let idx = 0
     if len(matchList) == 0
-        echo "Nothing is matched!"
         return 0
     elseif len(matchList) > 100
         echo "Too Many result!"
@@ -92,7 +92,7 @@ function GrepPattern(pattern, word)
         if idx <= 0 || idx > len(matchList)
             echo "Invalid Selection!"
             sleep 1
-            return 0
+            return 1
         endif
         let idx = idx - 1
     endif
@@ -120,6 +120,16 @@ endfunction
 
 function GrepClass(word)
     return GrepPattern('\bclass ' . a:word . '\b[a-zA-Z0-9_ ]*[:{\n]', a:word)
+endfunction
+
+function GrepDefinition(word)
+    if GrepClass(a:word) == 1
+        return
+    elseif GrepFunction(a:word) == 1
+        return
+    elseif GrepWord(a:word) == 1
+        return
+    endif
 endfunction
 
 function GrepBack()
