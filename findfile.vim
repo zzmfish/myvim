@@ -1,13 +1,21 @@
+function GetFileList()
+    "从cscope.files获得
+    let cscope_file = 'cscope.files'
+    if filereadable(cscope_file)
+        return readfile(cscope_file)
+    endif
+    "使用find命令得到文件列表
+    return split(glob('`find . -name "*.h" -o -name "*.c" -o -name "*.cpp" -o -name "*.py"`'), '\n')
+endfunction
 
 function FindFile()
-  if ! filereadable('cscope.files')
-    echo "ERROE: Can not read cscope.files"
+  let fileList = GetFileList()
+  if len(fileList) == 0
     return
   endif
-  tabnew
 
+  tabnew
   let select = 0
-  let fileList = readfile('cscope.files')
   let lastFilter = ""
   let filter = ""
   let filePos = 0
