@@ -12,8 +12,11 @@ function Highlight(pattern)
     syntax clear
     if a:pattern != ""
       syntax case ignore
-      execute 'syntax match FindFileFilter "' . a:pattern . '"'
-      highlight FindFileFilter ctermfg=darkgreen
+      "匹配文件名，排除目录部分
+      syntax match FindFile_BaseName "/[^/]\+$" contains=FindFile_Filter
+      "高亮搜索关键字
+      execute 'syntax match FindFile_Filter "' . a:pattern . '" contained containedin=FindFile_BaseName'
+      highlight FindFile_Filter ctermfg=darkgreen
     endif
 endfunction
 
