@@ -8,6 +8,15 @@ function GetFileList()
     return split(glob('`find . -name "*.h" -o -name "*.c" -o -name "*.cpp" -o -name "*.py"`'), '\n')
 endfunction
 
+function Highlight(pattern)
+    syntax clear
+    if a:pattern != ""
+      syntax case ignore
+      execute 'syntax match FindFileFilter "' . a:pattern . '"'
+      highlight FindFileFilter ctermfg=darkgreen
+    endif
+endfunction
+
 function FindFile()
   let fileList = GetFileList()
   if len(fileList) == 0
@@ -66,12 +75,7 @@ function FindFile()
     endfor
 
     "显示颜色
-    syntax clear
-    if filter != ""
-      syntax case ignore
-      execute 'syntax match FindFileFilter "' . filter . '"'
-      highlight FindFileFilter ctermfg=darkgreen
-    endif
+    call Highlight(filter)
 
     "删除后面的行
     for i in range(0, winheight(0) - len(matchItems) - 2)
