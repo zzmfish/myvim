@@ -11,6 +11,11 @@ set mouse=n
 map <C-H> :tabprevious<CR>
 map <C-L> :tabnext<CR>
 
+" ~~~~ GVim ~~~~
+"
+set guifont="DejaVu Sans Mono 11"
+colorscheme darkblue
+
 
 " ~~~~ NERDTree ~~~~
 "
