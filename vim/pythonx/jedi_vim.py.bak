@@ -435,7 +435,7 @@ def _goto_specific_name(n, options=''):
         if not result:
             return []
         if (using_tagstack and n.module_path and
-                os.path.exists(n.module_path)):
+                n.module_path.exists()):
             tagname = n.name
             with tempfile('{0}\t{1}\t{2}'.format(
                     tagname, n.module_path, 'call cursor({0}, {1})'.format(
