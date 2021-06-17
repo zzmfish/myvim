@@ -10,7 +10,7 @@ set mouse=n
 
 map <C-H> :tabprevious<CR>
 map <C-L> :tabnext<CR>
-colorscheme industry
+"colorscheme industry
 
 " ~~~~ GUI ~~~~
 "
@@ -26,7 +26,7 @@ nnoremap <C-n> :NERDTreeToggle<CR>
 "autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
 
 " Open the existing NERDTree on each new tab.
-"autocmd BufWinEnter * silent NERDTreeMirror
+autocmd BufWinEnter * silent NERDTreeMirror
 
 let NERDTreeWinSize=50
 
